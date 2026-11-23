@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horror WA Simulator</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    background: #000;
+    color: red;
+    font-family: monospace;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 450px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 2px solid red;
+    box-shadow: 0 0 20px red;
+    border-radius: 12px;
+}
+
+h1 {
+    animation: blink 0.5s infinite;
+}
+
+img {
+    width: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    display: none;
+    margin-top: 20px;
+    border: 2px solid red;
+}<img id="hantu"
+src="1000154068.jpg"
+alt="Gambar horor">
+
+button {
+    background: darkred;
+    color: white;
+    border: 1px solid red;
+    padding: 15px;
+    margin: 8px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+#status {
+    color: lime;
+    margin: 20px;
+}
+
+@keyframes blink {
+    50% { opacity: 0.1; }
+}
+
+.shake {
+    animation: shake 0.1s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(3px, 2px); }
+    50% { transform: translate(-3px, -2px); }
+    100% { transform: translate(2px, -3px); }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="layar">
+
+<h1>☠ HORROR WA SIMULATOR ☠</h1>
+
+<p>⚠️ SIMULASI HOROR</p>
+
+<p id="status">STATUS: NORMAL</p>
+
+<button onclick="mulai()">MULAI</button>
+<button onclick="berhenti()">STOP</button>
+
+<img id="hantu" src="1000154068.jpg" alt="Gambar horor">
+
+</div>
+
+<script>
+let audioContext;
+let oscillator;
+let gain;
+let interval;
+
+function suaraHoror() {
+    audioContext = new (window.AudioContext ||
+    window.webkitAudioContext)();
+
+    oscillator = audioContext.createOscillator();
+    gain = audioContext.createGain();
+
+    oscillator.type = "sawtooth";
+    oscillator.frequency.value = 885;
+
+    gain.gain.value = 5.12;
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+}
+
+function mulai() {
+    berhenti();
+
+    let layar = document.getElementById("layar");
+    let gambar = document.getElementById("hantu");
+    let status = document.getElementById("status");
+
+    status.innerText = "⚠️ HORROR SIMULATION!";
+    gambar.style.display = "block";
+
+    layar.classList.add("shake");
+
+    suaraHoror();
+
+    interval = setInterval(() => {
+        layar.style.background =
+        layar.style.background === "white" ? "black" : "white";
+    }, 250);
+}
+
+function berhenti() {
+    clearInterval(interval);
+
+    if (oscillator) {
+        try { oscillator.stop(); } catch(e) {}
+        oscillator = null;
+    }
+
+    if (audioContext) {
+        audioContext.close();
+        audioContext = null;
+    }
+
+    document.getElementById("layar")
+    .classList.remove("shake");
+
+    document.getElementById("layar")
+    .style.background = "black";
+
+    document.getElementById("hantu")
+    .style.display = "none";
+
+    document.getElementById("status").innerText =
+    "STATUS: SIMULASI BERHENTI";
+}
+</script>
+
+</body>
+</html>
